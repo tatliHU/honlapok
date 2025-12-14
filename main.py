@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, abort
+from flask import Flask, send_from_directory, abort, request, render_template
 import os
 
 app = Flask(__name__)
@@ -27,3 +27,13 @@ def serve_file(folder, filename):
         abort(403)
 
     return send_from_directory(root, filename)
+
+@app.route("/")
+def index():
+    host = request.host.split(":")[0]
+    domain = host.replace("www.", "")
+    template = f"indexes/{domain}.html"
+    try:
+        return render_template(template)
+    except:
+        return "Site not found", 404
